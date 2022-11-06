@@ -1,15 +1,3 @@
-import React from "react";
-import './TodoCounter.css';
-//import Tareas from "./Tareas";
-
-/*
-function TodoCounter(){
-  return (
-    <h2>Bienvenidos, tienes 2 tareas por completar</h2>
-  );
-}
-*/
-
 const todos = [
   { description: 'Aprender React native', completed: false },
   { description: 'Utilizar Bootstrap como archivo css en React', completed: true },
@@ -29,7 +17,3 @@ todos.forEach(todo => {
   }
   return i;
 });
-
-const TodoCounter = () => <h2 className="TodoCounter">Hola Manuel Alejandro!,<br/>tienes {i} tareas por completar</h2>;
-
-export default TodoCounter;

@@ -1,0 +1,53 @@
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: var(--bs-list-group-item-padding-y) var(--bs-list-group-item-padding-x);
+  color: var(--bs-list-group-color);
+  text-decoration: none;
+  background-color: var(--bs-list-group-bg);
+  border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color)
+}
+
+.text-secondary {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-secondary-rgb), var(--bs-text-opacity)) !important
+}
+
+.link-primary {
+  color: #0d6efd !important
+}
+
+.link-primary:focus,
+.link-primary:hover {
+  color: #0a58ca !important
+}
+
+.link-warning {
+  color: #ffc107 !important
+}
+
+.link-warning:focus,
+.link-warning:hover {
+  color: #ffcd39 !important
+}
+
+.link-danger {
+  color: #dc3545 !important
+}
+
+.link-danger:focus,
+.link-danger:hover {
+  color: #b02a37 !important
+}
+
+.d-flex {
+  display: flex !important
+}
+
+.justify-content-between {
+  justify-content: space-between !important
+}
+
+.align-items-center {
+  align-items: center !important
+}
