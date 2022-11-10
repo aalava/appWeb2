@@ -1,0 +1,9 @@
+.form-text {
+  margin-top: .25rem;
+  font-size: .875em;
+  color: #6c757d
+}
+
+.float-end {
+  float: right !important
+}
