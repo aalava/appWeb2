@@ -56,7 +56,7 @@ function App() {
           <ProgressBar/>
         </div>
         <div className="card-body">
-          <TodoSearch search={search} setSearch ={setSearch} />
+          <TodoSearch search={search} setSearch={setSearch} />
           <TodoList>
             {todosFiltrados.map((todo)=>(
               <TodoItems key={todo.id} text={todo.description} status={todo.completed} deleteTodo={deleteTodo} />

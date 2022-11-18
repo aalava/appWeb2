@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 
-const urlAPI = 'https://api.thecatapi.com/v1/images/search?limit=3';
+const urlAPI = 'https://api.thedogapi.com/v1/breeds/?limit=10';
 
 const getDogs = async () => {
     const response = await fetch(urlAPI);
