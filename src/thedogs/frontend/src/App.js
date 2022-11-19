@@ -11,16 +11,16 @@ export default function App() {
 
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-    
+
   useEffect(() => {
     const execute = async () => {
     const response = await fetch("https://api.thedogapi.com/v1/breeds/");
     const json = await response.json();
-    
+
     setData(json);
-    setIsLoading(false); 
-  };  
-  execute();  
+    setIsLoading(false);
+  };
+  execute();
   }, []);
 
   if (isLoading) {
@@ -49,7 +49,7 @@ export default function App() {
         <Search className="mt-4 form-control" search={search} setSearch={setSearch} />
             <div className="row mt-3">
                 {todosFiltrados.map((i) => (
-                    <div key={i.id} className="col-md-2">                    
+                    <div key={i.id} className="col-md-2">
                         <div className="card">
                             <img className="card-img-top img-fluid" src={i.image.url} alt="" />
                             <div className="card-body">
@@ -57,10 +57,10 @@ export default function App() {
                                 <p className="card-text">{i.temperament}</p>
                             </div>
                         </div>
-                        <br />                   
-                    </div> 
+                        <br />
+                    </div>
                 ))}
-            </div>        
+            </div>
       </div>
     </div>
   );
