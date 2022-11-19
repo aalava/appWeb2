@@ -58,7 +58,7 @@ function App() {
   }
 
   const MySwal = withReactContent(Swal)
-
+/*
   const myAlert = (description) => {
     MySwal.fire({
       title: "Estás seguro de querer eliminar?",
@@ -71,6 +71,23 @@ function App() {
     }).then(function (e) {
       deleteTodo(description);
       e.value && Swal.fire("Eliminado!", "Tu registro ha sido eliminado.", "success")
+    })
+  }
+*/
+  const myAlert = (description) => {
+    MySwal.fire({
+      title: "Estás seguro de querer eliminar?",
+      text: description,
+      icon: "warning",
+      showCancelButton: !0,
+      confirmButtonColor: "#28bb4b",
+      cancelButtonColor: "#f34e4e",
+      confirmButtonText: "Sí, eliminarlo!"
+    }).then((e) => {
+      if (e.value){
+        deleteTodo(description);
+        e.value && Swal.fire("Eliminado!", "Tu registro ha sido eliminado.", "success")
+      }
     })
   }
 
