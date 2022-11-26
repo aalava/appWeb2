@@ -4482,8 +4482,17 @@ class BooksService {
     }
   }
 */
+
   showAllBook(){
-    return this.books;
+    let data = [];
+    this.books.map((i,j) => {
+      data.push({
+        'id': j+1,
+        'title': i.title,
+        'authors': i.authors
+      })
+    })
+    return data;
   }
 
   findOne(id){
