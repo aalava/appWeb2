@@ -1,6 +1,4 @@
-//const {faker} = require('@faker-js/faker');
-
-class BooksService {
+class AuthorsService {
   constructor(){
     this.books = [
       {
@@ -4470,19 +4468,12 @@ class BooksService {
       }
     ]
     this.newBooks = [];
-    this.generateId();
-  }
+    this.allAuthors = [];
+    this.AuthorsUnicos = [];
 
-/*
-  generate(){
-    for (let i=0; i<100; i++){
-      this.books.push({
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName()
-      })
-    }
+    this.generateId();
+    this.authors();
   }
-*/
 
   generateId(){
     this.books.map((i,j) => {
@@ -4496,84 +4487,125 @@ class BooksService {
         //'shortDescription': i.shortDescription,
         //'longDescription': i.longDescription,
         //'status': i.status,
-        //'authors': i.authors,
+        'authors': i.authors[0],
         'categories': i.categories[0]
       })
     })
   }
 
-  showAllBooks(){
-    return this.newBooks;
-  }
-
-  findOne(id){
-    const BookSearched = this.newBooks.find(bk => bk.id == id);
-    if (BookSearched===undefined){
-      return {
-        message: "No existe el libro que busca"
-      }
-    }
-    else {
-      return {
-        BookSearched
-      }
-    }
-  }
-
-  create(data){
-    const index = this.newBooks[this.newBooks.length-1].id;
-    this.newBooks.push({
-      'id': index+1,
-      'title': data.title,
-      'isbn': data.isbn,
-      'pageCount': data.pageCount,
-      'publishedDate': data.publishedDate,
-      'thumbnailUrl': data.thumbnailUrl,
-      'shortDescription': data.shortDescription,
-      'longDescription': data.longDescription,
-      'status': data.status,
-      'authors': data.authors,
-      'categories': data.categories
+  authors(){
+    this.newBooks.map((i) => {
+      this.allAuthors.push(i.authors);
     })
+    this.allAuthors = this.allAuthors.flat();
+
+    this.allAuthors.filter((valor, indice, arreglo) => {
+      if (arreglo.indexOf(valor) == indice){
+        this.AuthorsUnicos.push(valor);
+      }
+    })
+  }
+
+  getAllAuthors(){
     return {
-      'message': "Nuevo Libro Creado",
-      newBooks: this.newBooks[this.newBooks.length-1]
+      'message': "Mostrando un total de " +this.AuthorsUnicos.length + " autores",
+      'autores': this.AuthorsUnicos
     }
   }
 
-  update(id, change){
-    const positionToUpdate = this.newBooks.findIndex(bk => bk.id == id);
-    this.newBooks.splice(positionToUpdate, 1, {
-      'id': id,
-      'title': change.title,
-      'isbn': change.isbn,
-      'pageCount': change.pageCount,
-      'publishedDate': change.publishedDate,
-      'thumbnailUrl': change.thumbnailUrl,
-      'shortDescription': change.shortDescription,
-      'longDescription': change.longDescription,
-      'status': change.status,
-      'authors': change.authors,
-      'categories': change.categories
+  getBooksByAuthor(author){
+    const booksByAuthor = this.newBooks.filter(element => element.authors == author);
+    //this.authors();
+    return ({
+      message: 'Se ha encontrado ' + booksByAuthor.length + ' libros que coinciden con el autor: ' +author,
+      books: booksByAuthor
     })
-    return this.newBooks.find(bk => bk.id == id);
   }
 
-  delete(id){
-    const positionToDelete = this.newBooks.findIndex(bk => bk.id == id);
-    if (positionToDelete>=0){
-      const bookDeleted = this.newBooks.splice(positionToDelete, 1);
+  createAuthor(author){
+
+  }
+
+  updateBookByAuthor(author1, author2){
+    const booksToChange = [];
+    const positionToUpdate = [];
+    let booksChanged = [];
+
+    this.newBooks.filter((valor, indice) => {
+      if (valor.authors == author1){
+        booksToChange.push({
+          'id': valor.id,
+          'title': valor.title,
+          'authors': valor.authors,
+          'categories': valor.categories
+        })
+        positionToUpdate.push(indice);
+      }
+    })
+
+    for (let i=0; i < positionToUpdate.length; i++){
+      booksChanged.push({
+        'id': booksToChange[i].id,
+        'title': booksToChange[i].title,
+        'authors': author2,
+        'categories': booksToChange[i].categories,
+      })
+
+      this.newBooks.splice(positionToUpdate[i], 1, {
+        'id': this.newBooks[positionToUpdate[i]].id,
+        'title': this.newBooks[positionToUpdate[i]].title,
+        'authors': author2,
+        'categories': this.newBooks[positionToUpdate[i]].categories,
+      })
+    }
+
+    this.authors()
+
+    if (booksChanged.length>0){
       return {
-        message: "El siguiente libro ha sido eliminado:",
-        newBooks: bookDeleted
+        'message': 'Los siguientes libros cambiaron de autor',
+        'booksChanged': booksChanged
       }
     }
     else {
       return {
-        message: "El libro que quiere eliminar no existe o ya se eliminó"
+        'message': 'No existen libros para cambiar o ya fueron cambiados de autor'
+      }
+    }
+  }
+
+  deleteBookByAuthor(author){
+    const booksToDelete = [];
+    const positionToDelete = [];
+
+    this.newBooks.filter((valor, indice) => {
+      if (valor.authors == author){
+        booksToDelete.push({
+          'id': valor.id,
+          'title': valor.title,
+          'authors': valor.authors,
+          'categories': valor.categories
+        })
+        positionToDelete.push(indice);
+      }
+    })
+
+    for (let i=0; i < positionToDelete.length; i++){
+      this.newBooks.splice(positionToDelete[i], 1, {})
+    }
+
+    if (booksToDelete.length>0){
+      return {
+        'message': 'Los siguientes libros fueron eliminados, ya que el autor: ' +author+ ', ya no existe',
+        'booksDeleted': booksToDelete
+      }
+    }
+    else {
+      return {
+        'message': 'No existen libros para eliminar del autor: ' +author
       }
     }
   }
 }
 
-module.exports = BooksService;
+module.exports = AuthorsService;

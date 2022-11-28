@@ -1,6 +1,4 @@
-//const {faker} = require('@faker-js/faker');
-
-class BooksService {
+class CategoriesService {
   constructor(){
     this.books = [
       {
@@ -4470,19 +4468,12 @@ class BooksService {
       }
     ]
     this.newBooks = [];
-    this.generateId();
-  }
+    this.allCategories = [];
+    this.categoriasUnicas = [];
 
-/*
-  generate(){
-    for (let i=0; i<100; i++){
-      this.books.push({
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName()
-      })
-    }
+    this.generateId();
+    this.categorias();
   }
-*/
 
   generateId(){
     this.books.map((i,j) => {
@@ -4502,78 +4493,110 @@ class BooksService {
     })
   }
 
-  showAllBooks(){
-    return this.newBooks;
+  categorias(){
+    this.newBooks.map((i) => {
+      this.allCategories.push(i.categories);
+    })
+    this.allCategories = this.allCategories.flat();
+
+    this.allCategories.filter((valor, indice, arreglo) => {
+      if (arreglo.indexOf(valor) == indice){
+        this.categoriasUnicas.push(valor);
+      }
+    })
   }
 
-  findOne(id){
-    const BookSearched = this.newBooks.find(bk => bk.id == id);
-    if (BookSearched===undefined){
-      return {
-        message: "No existe el libro que busca"
-      }
-    }
-    else {
-      return {
-        BookSearched
-      }
-    }
+  showAllCategories(){
+    return this.categoriasUnicas;
+  }
+
+  //consultar con el Profe
+  findOne(catId){
+    const booksByCategory = this.newBooks.filter(element => element.categories == catId);
+    return ({
+      message: 'Se ha encontrado ' + booksByCategory.length + ' libros que coinciden con la categoría: ' +catId,
+      books: booksByCategory
+    })
   }
 
   create(data){
-    const index = this.newBooks[this.newBooks.length-1].id;
-    this.newBooks.push({
-      'id': index+1,
-      'title': data.title,
-      'isbn': data.isbn,
-      'pageCount': data.pageCount,
-      'publishedDate': data.publishedDate,
-      'thumbnailUrl': data.thumbnailUrl,
-      'shortDescription': data.shortDescription,
-      'longDescription': data.longDescription,
-      'status': data.status,
-      'authors': data.authors,
-      'categories': data.categories
+
+  }
+
+  update(category, categoryTochange){
+    const booksToChange = [];
+    const positionToUpdate = [];
+    let booksChanged = [];
+
+    this.newBooks.filter((valor, indice) => {
+      if (valor.categories == category){
+        booksToChange.push({
+          'id': valor.id,
+          'title': valor.title,
+          'categories': valor.categories
+        })
+        positionToUpdate.push(indice);
+      }
     })
-    return {
-      'message': "Nuevo Libro Creado",
-      newBooks: this.newBooks[this.newBooks.length-1]
+
+    for (let i=0; i < positionToUpdate.length; i++){
+      booksChanged.push({
+        'id': booksToChange[i].id,
+        'title': booksToChange[i].title,
+        'categories': categoryTochange
+      })
+
+      this.newBooks.splice(positionToUpdate[i], 1, {
+        'id': this.newBooks[positionToUpdate[i]].id,
+        'title': this.newBooks[positionToUpdate[i]].title,
+        'categories': categoryTochange
+      })
     }
-  }
 
-  update(id, change){
-    const positionToUpdate = this.newBooks.findIndex(bk => bk.id == id);
-    this.newBooks.splice(positionToUpdate, 1, {
-      'id': id,
-      'title': change.title,
-      'isbn': change.isbn,
-      'pageCount': change.pageCount,
-      'publishedDate': change.publishedDate,
-      'thumbnailUrl': change.thumbnailUrl,
-      'shortDescription': change.shortDescription,
-      'longDescription': change.longDescription,
-      'status': change.status,
-      'authors': change.authors,
-      'categories': change.categories
-    })
-    return this.newBooks.find(bk => bk.id == id);
-  }
-
-  delete(id){
-    const positionToDelete = this.newBooks.findIndex(bk => bk.id == id);
-    if (positionToDelete>=0){
-      const bookDeleted = this.newBooks.splice(positionToDelete, 1);
+    if (booksChanged.length>0){
       return {
-        message: "El siguiente libro ha sido eliminado:",
-        newBooks: bookDeleted
+        'message': 'Los siguientes libros cambiaron de categoría',
+        'booksChanged': booksChanged
       }
     }
     else {
       return {
-        message: "El libro que quiere eliminar no existe o ya se eliminó"
+        'message': 'No existen libros para cambiar o ya fueron cambiados de categoría'
+      }
+    }
+  }
+
+  delete(category){
+    const booksToDelete = [];
+    const positionToDelete = [];
+
+    this.newBooks.filter((valor, indice) => {
+      if (valor.categories == category){
+        booksToDelete.push({
+          'id': valor.id,
+          'title': valor.title,
+          'categories': valor.categories
+        })
+        positionToDelete.push(indice);
+      }
+    })
+
+    for (let i=0; i < positionToDelete.length; i++){
+      this.newBooks.splice(positionToDelete[i], 1, {})
+    }
+
+    if (booksToDelete.length>0){
+      return {
+        'message': 'Los siguientes libros fueron eliminados, ya que la categoría: ' +category+ ', ya no existe',
+        'booksDeleted': booksToDelete
+      }
+    }
+    else {
+      return {
+        'message': 'No existen libros para eliminar de la categoría: ' +category
       }
     }
   }
 }
 
-module.exports = BooksService;
+module.exports = CategoriesService
